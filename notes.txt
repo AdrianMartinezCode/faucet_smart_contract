@@ -1,6 +1,6 @@
 We use the ganache tool as a local ethereum blockchain.
 
-To link the ganache to our project, we have to the truffle-config.js and configure the correct ip address.
+To link the ganache to our project, we have to go to the truffle-config.js and configure the correct ip address.
 And go to the contracts section on the ganache, and link this file truffle-config.js.
 This provokes that the smart contracts that we did will appear on this section.
 
@@ -37,7 +37,7 @@ cd /home/adrian/solidity_course/faucet
 truffle console
 
 To get the contract instance:
-const instance = new web3.eth.Contract(Faucet.abi, "0xCe47072dD6156eA79aC7aBB7d17a0d7af0A2a5Db")
+const instance = new web3.eth.Contract(Faucet.abi, "0x11D8c3EC90f60614879a5E33fEAE3Ba49510bc70")
 
 
 Retrieve the funds variable from a contract:
