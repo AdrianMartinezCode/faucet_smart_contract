@@ -1,0 +1,47 @@
+We use the ganache tool as a local ethereum blockchain.
+
+To link the ganache to our project, we have to the truffle-config.js and configure the correct ip address.
+And go to the contracts section on the ganache, and link this file truffle-config.js.
+This provokes that the smart contracts that we did will appear on this section.
+
+
+To compile the contracts:
+truffle compile
+
+To migrate the contract, we should create a migration file for every contract, named:
+
+[#number]_[contract name]_migration.js
+
+Into this file, the basic migration code is:
+
+const FaucetContract = artifacts.require("Faucet"); // <-- name of the smart contract, this line set as a variable our smart contract
+
+module.exports = function (deployer) { // <-- set the default function for this file the deploying of the smart contract passing by argument the deployer, the deployer is injected automatically by the migration agent
+    deployer.deploy(FaucetContract);
+}
+
+To compile and migrate contracts:
+truffle migrate
+
+
+
+
+
+web3: is a collection of libs that allow you to interact with
+a local or remote ethereum node.
+
+https://web3js.readthedocs.io/en/v1.7.5/
+
+To access to the faucet console:
+cd /home/adrian/solidity_course/faucet
+truffle console
+
+To get the contract instance:
+const instance = new web3.eth.Contract(Faucet.abi, "0xCe47072dD6156eA79aC7aBB7d17a0d7af0A2a5Db")
+
+
+Retrieve the funds variable from a contract:
+const funds = await instance.methods.funds().call()
+
+
+
