@@ -6,7 +6,7 @@ This provokes that the smart contracts that we did will appear on this section.
 
 
 To compile the contracts:
-truffle compile
+> truffle compile
 
 To migrate the contract, we should create a migration file for every contract, named:
 
@@ -21,7 +21,7 @@ module.exports = function (deployer) { // <-- set the default function for this 
 }
 
 To compile and migrate contracts:
-truffle migrate
+> truffle migrate
 
 
 
@@ -33,15 +33,96 @@ a local or remote ethereum node.
 https://web3js.readthedocs.io/en/v1.7.5/
 
 To access to the faucet console:
-cd /home/adrian/solidity_course/faucet
-truffle console
+> cd /home/adrian/solidity_course/faucet
+> truffle console
 
 To get the contract instance:
-const instance = new web3.eth.Contract(Faucet.abi, "0x11D8c3EC90f60614879a5E33fEAE3Ba49510bc70")
+> const instance = new web3.eth.Contract(Faucet.abi, "0x11D8c3EC90f60614879a5E33fEAE3Ba49510bc70")
 
 
 Retrieve the funds variable from a contract:
-const funds = await instance.methods.funds().call()
+> const funds = await instance.methods.funds().call()
 
 
+If you run:
 
+> truffle console
+> accounts
+
+You will see the accounts on the ganache that you own, avaliable in the context.
+
+https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html#sendtransaction
+
+How to create a transaction
+
+Convert units:
+https://eth-converter.com/
+
+If you type on the truffle console:
+> web3.eth.sendTransaction({from: accounts[0], to: "0x2af9Cf8b00293E1654Fb0F008e588691A046780a", value: "10000000000000000000"})
+
+This sends 10 eth to the account hardcoded.
+
+THis command allows you to show the information about the nth block:
+> web3.eth.getBlock("9")
+
+
+Transactions visualizer:
+
+http://ethviewer.live/
+
+The bubbles indicates the transactions on the mempool.
+
+
+You can search for certain transaction here:
+
+https://etherscan.io/
+
+
+The nonce number is incremented for every block
+The nonce number must be larger of the target
+Is used to guarantee the preservation from the information of the blocks.
+Is a combination with the hash.
+Is a random number that guarantees the old hashes aren't be able to reuse.
+
+you can see the definition of the old pow algorithm from ethereum:
+https://ethereum.org/es/developers/docs/consensus-mechanisms/pow/mining-algorithms/ethash/#mining
+
+
+Blockchain datastructure simulator:
+https://andersbrownworth.com/blockchain/blockchain
+
+
+Ethereum yellow paper:
+https://ethereum.github.io/yellowpaper/paper.pdf
+
+Ethereum block arquitecture:
+https://ethereum.stackexchange.com/questions/268/ethereum-block-architecture
+
+
+We can decode a certain transaction on the ethereum blockchain:
+https://toolkit.abdk.consulting/ethereum#transaction
+
+https://github.com/Jerga99/faucet-course/commit/2cc3a2115e85f2ee044617dff0d9668e0d06977d
+
+
+-------------------
+
+You can send funds to an ethereum smart contract just putting their contract addres on the to field:
+
+web3.eth.sendTransaction({from: accounts[0], to: "0x2B2541AFDA826DeaB68B4391Dc3677B33098cd30", data: ""})
+
+You must provide the function signature getting the hash from the function name with:
+https://emn178.github.io/online-tools/keccak_256.html
+
+And getting the first 4 bytes of the name:
+
+addFunds() -> a26759cbc968c68c5eb5853f763227a619bc9612320b36b21463d21f1dc9ec98
+
+Extract: 0xa26759cb
+
+And provide it to the data field:
+
+web3.eth.sendTransaction({from: accounts[0], to: "0x2B2541AFDA826DeaB68B4391Dc3677B33098cd30", data: "0xa26759cb", value: "3000000000000000000"})
+
+If you see the bytecode, you can find this 0xa26759cb signature as a push command of this signature.
