@@ -126,3 +126,126 @@ And provide it to the data field:
 web3.eth.sendTransaction({from: accounts[0], to: "0x2B2541AFDA826DeaB68B4391Dc3677B33098cd30", data: "0xa26759cb", value: "3000000000000000000"})
 
 If you see the bytecode, you can find this 0xa26759cb signature as a push command of this signature.
+Data is the function that will be executed on the moment that we make the transaction.
+
+
+
+-------------------------------------------
+Example of smart contract:
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.4.22 <0.9.0;
+
+contract Faucet {
+    // this is a special function
+    // it's called when you make a tx that doesn't specify
+    //  function name to call
+
+    // External function are part of the contract interface
+    //  which means they can be called via contracts and other txs
+
+    // external keyword means: can be called from the outside
+    // payable keyword means: provide ether in the tx
+    receive() external payable {}
+
+    // If you try to use this command on the truffle console:
+    // instance.addFunds({value: "2000000000000000000"})
+    // if you didn't make the function payable, this will crash
+    function addFunds() external payable {}
+
+    // pure, view - read-only call, no gas fee
+    // view - it indicates that the function won't alter the storage state in any way
+    // pure - even more strict, indicating that it won't even read the storage state
+    function justTesting() external pure returns(uint) {
+        return 2 + 2;
+    }
+
+    // Transactions (can generate state changes) and require gas fee
+    // read-only call, no gas fee
+
+    // to talk to the node on the network you can make JSON-RPC http calls
+    
+
+
+}
+
+// Block info
+// Nonce - a hash that when combined with the minHash proofs that
+// the block has gone through proof of work(POW)
+// 8 bytes => 64 bits
+
+------------------------------------------
+
+On the truffle console to access to certain position of the memory:
+
+const instance = await Storage.deployed()
+// the first parameter is the smart contract address:
+web3.eth.getStorageAt("0xc30369Ca553f5441adD4B7ec0a6eE6d6491e2A84", 0)
+
+
+--------------------------------------------
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.4.22 <0.9.0;
+
+contract Faucet {
+
+    address[] private funders;
+
+    // private -> can be accesible only within the smart contract
+    //  on the bytecode we won't found the signature!!
+    // internal -> can be accesible within smart contract and also derived smart contract
+
+    receive() external payable {}
+    function addFunds() external payable {
+        funders.push(msg.sender);
+    }
+
+    function getAllFunders() public view returns (address[] memory) {
+        return funders;
+    }
+
+    function getFunderAtIndex(uint8 index) external view returns (address) {
+        address[] memory _funders = getAllFunders();
+        return _funders[index];
+    }
+}
+
+// const instance = await Faucet.deployed();
+// instance.addFunds({from: accounts[0], value: "2"})
+-----------------------------------
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.4.22 <0.9.0;
+
+contract Faucet {
+
+    uint public numOfFunders;
+    mapping(uint => address) private funders;
+
+    receive() external payable {}
+    function addFunds() external payable {
+        uint index = numOfFunders++;
+        funders[index] = msg.sender;
+    }
+
+    function getAllFunders() external view returns (address[] memory) {
+        address[] memory _funders = new address[](numOfFunders);
+
+        for (uint i = 0; i < numOfFunders; i++) {
+            _funders[i] = funders[i];    
+        }
+
+        return _funders;
+    }
+
+    function getFunderAtIndex(uint8 index) external view returns (address) {
+        return funders[index];
+    }
+}
+
+// const instance = await Faucet.deployed();
+// instance.addFunds({from: accounts[0], value: "20000000000"})
+// instance.addFunds({from: accounts[1], value: "20000000000"})
+// instance.getFunderAtIndex(0);
+
+----------------------------------------------------------
