@@ -249,3 +249,15 @@ contract Faucet {
 // instance.getFunderAtIndex(0);
 
 ----------------------------------------------------------
+
+
+METAMASK:
+
+Is the layer that in our case, will communicate the html/js with the ganache node that
+we have in local, in other environment, the metamask communicates the html/js with the
+real ethereum blockchain.
+
+The html/js uses the web3js library to interact with the metamask.
+
+Until now, we have used the truffle console with the web3js api to interact with the
+local ganache ethereum blockchain.

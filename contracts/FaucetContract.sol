@@ -1,21 +1,56 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-contract Faucet {
+import "./Owned.sol";
+import "./Logger.sol";
+import "./IFaucet.sol";
+
+contract Faucet is Owned, Logger, IFaucet {
 
     uint public numOfFunders;
+
     mapping(address => bool) private funders;
     mapping(uint => address) private lutFunders;
 
+    // Called on the deployment contract stage and the init command actioned
+    constructor() {}
+
+    // You can put this modifier into any function to check the argument
+    modifier limitWithdraw(uint withdrawAmount) {
+        require(
+            withdrawAmount <= 100000000000000000, 
+            "Cannot withdraw more than 0.1 ether"
+        );
+        _; // this undescore is the function body that extends from this function that will be executed 
+    }
+
     receive() external payable {}
-    function addFunds() external payable {
+
+    function emitLog() public override pure returns(bytes32) {
+        return "Hello World";
+    }
+
+    function addFunds() override external payable {
         address funder = msg.sender;
+        test3();
         
         if (!funders[funder]) {
             uint index = numOfFunders++;
             funders[funder] = true;
             lutFunders[index] = funder;
         }
+    }
+
+    function test1() external onlyOwner {
+        // some managing stuff that only admin should have access to
+    }
+
+    function test2() external onlyOwner {
+        // some managing stuff that only admin should have access to
+    }
+
+    function withdraw(uint withdrawAmount) override external limitWithdraw(withdrawAmount) {
+        payable(msg.sender).transfer(withdrawAmount);
     }
 
     function getAllFunders() external view returns (address[] memory) {
@@ -34,6 +69,9 @@ contract Faucet {
 }
 
 // const instance = await Faucet.deployed();
-// instance.addFunds({from: accounts[0], value: "20000000000"})
-// instance.addFunds({from: accounts[1], value: "20000000000"})
+// instance.addFunds({from: accounts[0], value: "2000000000000000000"})
+// instance.addFunds({from: accounts[1], value: "2000000000000000000"})
+
+// instance.withdraw("500000000000000000", {from: accounts[1]})
+
 // instance.getFunderAtIndex(0);
