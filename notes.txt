@@ -261,3 +261,85 @@ The html/js uses the web3js library to interact with the metamask.
 
 Until now, we have used the truffle console with the web3js api to interact with the
 local ganache ethereum blockchain.
+
+
+12 words seed + password => private key
+
+The private key is 32bytes length
+
+From your private key you can generate your public key, that is 32bytes length
+
+And from your public key you can generate your public address, that is 20bytes length.
+
+You can sign transactions with your private key and as an external actor,
+you can verify the sign with the public key.
+
+
+To add our ganache network to our metamask we should do the next steps:
+
+1. Click on the networks section and click on "Add network".
+2. We want to add a new network manually, then click on "Add a network manually"
+3. On the next section fill with the next values:
+
+
+Network name: Ganache
+New RPC URL: http://127.0.0.1:7545
+Chain ID: 1337
+Currency symbol: eth
+
+4. Select it.
+
+
+
+Now, we want to use one of our ganache predefined accounts, then, go to the metamask page,
+click on our image profile, and "Import account",
+on the ganache, extract the private key from one of the predefined accounts.
+
+-----------------
+
+https://ethereum.org/en/developers/docs/transactions/
+https://toolkit.abdk.consulting/ethereum
+
+If we have the next transaction to send to the ethereum network:
+
+from: 0x72...
+to: 0x31AB...
+value: 10000000000000000 // wei
+gasLimit: 21000
+nounce: 2
+
+This transaction can be replicated by a malicious entity if we send without anything else
+and the malicious entity increase the nounce,
+in the blockain technology, we sign the transactions to prevent any identity suplantation.
+Let's take the message and we apply the next function:
+
+sign(message, private key) = signature
+
+We can verify the signature with the public key.
+
+verify(message, signature, public key) = true/false
+
+Parts of the signature: 
+r,
+s,
+v
+
+r,s,v = sig(keccak256(RLP(tx)), private key)
+
+RLP = Recursive Length Prefix
+
+On the toolkit abd resource link, into the section Transaction,
+you can decode any transaction from ethereum scan (https://etherscan.io) and get their
+raw transaction:
+
+If you put the next hash:
+0x02f87501830445b8841608f95c8505ea338ef2825208943722bd9e69946cec4f17b03e9d092c4cc2a8746987886bdc1f9cdc0080c080a055d22a372f7fdb9fe5ade0653797afe37dfbff9b9973e183a5a8967b81dbe324a036d8d72466053b066391e12a57b44f706c547755706ae941aee172cda154059f
+
+You can view different details about it.
+
+
+Another detail about the nonce, if we have Bob that try to make two transactions, one sending 6eth
+and the other sending 3eth, and Bob only have 6eth, if the second transaction is ativated first,
+the first transaction won't be able to complete, then, the nonce is a unique and incremental value
+that prevents this situation, first transaction will be assigned by nonce 2 and the second by nonce 5,
+that means the first transaction always will be executed first.
